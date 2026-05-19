@@ -41,6 +41,8 @@ async function login(req, res) {
       password,
     });
 
+    console.log("🔐 ORDS AUTH RESPONSE:", data);
+
 if (data?.success !== true && data?.success !== "true") {
   return res.status(401).json({
     message: data?.message || "Invalid credentials",
