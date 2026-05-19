@@ -41,11 +41,11 @@ async function login(req, res) {
       password,
     });
 
-    if (!data?.success) {
-      return res.status(401).json({
-        message: data?.message || "Invalid credentials",
-      });
-    }
+if (data?.success !== true && data?.success !== "true") {
+  return res.status(401).json({
+    message: data?.message || "Invalid credentials",
+  });
+}
 
     const user_id = Number(data.user_id);
     const emp_id = data.emp_id ? String(data.emp_id) : null;
@@ -114,7 +114,10 @@ async function refresh(req, res) {
       device_id,
     });
 
+    console.log("🔄 REFRESH VALIDATE RESPONSE:", data);
+
     const user_id = Number(data?.user_id);
+    const emp_id = data?.emp_id ? String(data.emp_id) : null;
 
     if (!user_id) {
       return res.status(401).json({ message: "Invalid refresh token" });
@@ -124,6 +127,7 @@ async function refresh(req, res) {
       {
         sub: String(user_id),
         role: "user",
+        emp_id,
       },
       "30m"
     );
@@ -140,6 +144,10 @@ async function refresh(req, res) {
     return res.json({
       access_token,
       refresh_token: new_refresh_token,
+      profile: {
+        user_id,
+        emp_id,
+      },
     });
   } catch (e) {
     console.error("❌ REFRESH ERROR:", e.response?.data || e.message);
