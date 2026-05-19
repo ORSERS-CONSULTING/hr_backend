@@ -7,10 +7,10 @@ const {
 } = require("../controllers/authController");
 
 
-router.get("/login", login);
+router.post("/login", login);
 
-router.get("/refresh", refresh);
+router.post("/refresh", refresh);
 
-router.get("/logout", logout);
+router.post("/logout", logout);
 
 module.exports = router;
