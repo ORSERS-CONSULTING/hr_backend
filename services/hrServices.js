@@ -35,7 +35,7 @@ function getPayrollDetails(attendance_code) {
 
 function getDocuments(attendance_code) {
   if(!attendance_code) throw new Error("attendance_code is required")
-  return callGateway("GET", "document", { params: { attendance_code } });
+  return callGateway("GET", "documents", { params: { attendance_code } });
 };
 
 module.exports={
