@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use("/hrAuth", hrRoutes);
+app.use("/hrAuth", authRoutes);
 
 app.use("/hrServices", hrRoutes);
 
