@@ -41,13 +41,12 @@ async function login(req, res) {
       password,
     });
 
-    console.log("🔐 ORDS AUTH RESPONSE:", data);
 
-if (data?.success !== true && data?.success !== "true") {
-  return res.status(401).json({
-    message: data?.message || "Invalid credentials",
-  });
-}
+    if (data?.success !== true && data?.success !== "true") {
+      return res.status(401).json({
+        message: data?.message || "Invalid credentials",
+      });
+    }
 
     const user_id = Number(data.user_id);
     const emp_id = data.emp_id ? String(data.emp_id) : null;
@@ -92,9 +91,9 @@ if (data?.success !== true && data?.success !== "true") {
 
     return res.status(code).json(
       e.response?.data ??
-        e.upstream?.data ?? {
-          message: e.message || "Login failed",
-        }
+      e.upstream?.data ?? {
+        message: e.message || "Login failed",
+      }
     );
   }
 }
@@ -158,9 +157,9 @@ async function refresh(req, res) {
 
     return res.status(code).json(
       e.response?.data ??
-        e.upstream?.data ?? {
-          message: e.message || "Refresh failed",
-        }
+      e.upstream?.data ?? {
+        message: e.message || "Refresh failed",
+      }
     );
   }
 }
@@ -193,9 +192,9 @@ async function logout(req, res) {
 
     return res.status(code).json(
       e.response?.data ??
-        e.upstream?.data ?? {
-          message: e.message || "Logout failed",
-        }
+      e.upstream?.data ?? {
+        message: e.message || "Logout failed",
+      }
     );
   }
 }
