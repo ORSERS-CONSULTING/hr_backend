@@ -1,5 +1,7 @@
 const router = require("express").Router();
 
+const { authUser } = require("../middleware/authUser");
+
 const {
     employeeProfile,
     leaveDetails,
@@ -8,12 +10,12 @@ const {
 } = require("../controllers/hrController");
 
 
-router.get("/employeeProfile", employeeProfile);
+router.get("/employeeProfile", authUser, employeeProfile);
 
-router.get("/leaveDetails", leaveDetails);
+router.get("/leaveDetails", authUser, leaveDetails);
 
-router.get("/payrollDetails", payrollDetails);
+router.get("/payrollDetails", authUser, payrollDetails);
 
-router.get("/documentDetails", documentDetails);
+router.get("/documentDetails", authUser, documentDetails);
 
 module.exports = router;

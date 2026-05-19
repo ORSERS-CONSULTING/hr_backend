@@ -1,14 +1,20 @@
 const express = require("express");
 const cors = require("cors");
 
+
+const authRoutes = require("./routes/authRoutes");
+
 const hrRoutes = require("./routes/hrRoutes");
+
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
-app.use("/hr", hrRoutes);
+app.use("/hrAuth", hrRoutes);
+
+app.use("/hrServices", hrRoutes);
 
 app.get("/health", (_req, res) => {
   res.json({ ok: true });

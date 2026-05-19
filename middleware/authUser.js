@@ -6,7 +6,12 @@ function authUser(req, res, next) {
     const token = h.startsWith('Bearer ') ? h.slice(7) : '';
     if (!token) return res.status(401).json({ message: 'Missing token' });
     const payload = verifyAccessToken(token);
-    req.user = { id: payload.sub || payload.user_id, role: payload.role, email: payload.email };
+    req.user = {
+      id: payload.sub || payload.user_id,
+      role: payload.role,
+      email: payload.email,
+      emp_id: payload.emp_id,
+    };
     if (!req.user.id) return res.status(401).json({ message: 'Token missing subject' });
     next();
   } catch (e) {
@@ -29,6 +34,7 @@ function optionalAuthUser(req, res, next) {
       id: payload.sub || payload.user_id,
       role: payload.role,
       email: payload.email,
+      emp_id: payload.emp_id,
     };
 
     return next();

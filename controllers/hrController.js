@@ -5,11 +5,24 @@ const {
     getDocuments
 } = require("../services/hrServices");
 
+function getAttendanceCodeFromToken(req, res) {
+    const attendance_code = req.user?.emp_id;
+
+    if (!attendance_code) {
+        res.status(401).json({
+            success: false,
+            message: "Employee ID missing from token",
+        });
+        return null;
+    }
+
+    return attendance_code;
+}
+
 async function employeeProfile(req, res) {
     try {
-
-        const b = req.query || req.body || {};
-        const attendance_code = b.attendance_code;
+        const attendance_code = getAttendanceCodeFromToken(req, res);
+        if (!attendance_code) return;
 
         const data = await getEmployeeProfile(attendance_code);
 
@@ -28,9 +41,8 @@ async function employeeProfile(req, res) {
 
 async function leaveDetails(req, res) {
     try {
-
-        const b = req.query || req.body || {};
-        const attendance_code = b.attendance_code;
+        const attendance_code = getAttendanceCodeFromToken(req, res);
+        if (!attendance_code) return;
 
         const data = await getLeaveDetails(attendance_code);
 
@@ -49,9 +61,8 @@ async function leaveDetails(req, res) {
 
 async function payrollDetails(req, res) {
     try {
-
-        const b = req.query || req.body || {};
-        const attendance_code = b.attendance_code;
+        const attendance_code = getAttendanceCodeFromToken(req, res);
+        if (!attendance_code) return;
 
         const data = await getPayrollDetails(attendance_code);
 
@@ -69,9 +80,8 @@ async function payrollDetails(req, res) {
 
 async function documentDetails(req, res) {
     try {
-
-        const b = req.query || req.body || {};
-        const attendance_code = b.attendance_code;
+        const attendance_code = getAttendanceCodeFromToken(req, res);
+        if (!attendance_code) return;
 
         const data = await getDocuments(attendance_code);
 
