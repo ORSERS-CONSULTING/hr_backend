@@ -7,7 +7,9 @@ const {
     leaveDetails,
     payrollDetails,
     documentDetails,
-    userAttendance
+    userAttendance,
+    leaveHistory,
+    leaveBalance
 } = require("../controllers/hrController");
 
 
@@ -20,5 +22,8 @@ router.get("/payrollDetails", authUser, payrollDetails);
 router.get("/documentDetails", authUser, documentDetails);
 
 router.get("/userAttendance", authUser, userAttendance);
+
+router.get("/leave/history", authUser, leaveHistory);
+router.get("/leave/balance", authUser, leaveBalance);
 
 module.exports = router;

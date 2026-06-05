@@ -18,23 +18,23 @@ async function callGateway(method, path, { params, data } = {}) {
 
 
 function getEmployeeProfile(attendance_code) {
-  if(!attendance_code) throw new Error("attendance_code is required")
+  if (!attendance_code) throw new Error("attendance_code is required")
   return callGateway("GET", "employee", { params: { attendance_code } });
 };
 
 function getLeaveDetails(attendance_code) {
-  if(!attendance_code) throw new Error("attendance_code is required")
+  if (!attendance_code) throw new Error("attendance_code is required")
   return callGateway("GET", "leave", { params: { attendance_code } });
 };
 
 function getPayrollDetails(attendance_code) {
-  if(!attendance_code) throw new Error("attendance_code is required")
+  if (!attendance_code) throw new Error("attendance_code is required")
   return callGateway("GET", "payroll", { params: { attendance_code } });
 };
 
 
 function getDocuments(attendance_code) {
-  if(!attendance_code) throw new Error("attendance_code is required")
+  if (!attendance_code) throw new Error("attendance_code is required")
   return callGateway("GET", "document", { params: { attendance_code } });
 };
 
@@ -53,10 +53,28 @@ function getUserAttendance(attendance_code, year, month) {
   });
 }
 
-module.exports={
-    getEmployeeProfile,
-    getLeaveDetails,
-    getPayrollDetails,
-    getDocuments,
-    getUserAttendance
+function getLeaveHistory(attendance_code) {
+  if (!attendance_code) throw new Error("attendance_code is required");
+
+  return callGateway("GET", "leave/history", {
+    params: { attendance_code },
+  });
+}
+
+function getLeaveBalance(attendance_code) {
+  if (!attendance_code) throw new Error("attendance_code is required");
+
+  return callGateway("GET", "leave/balance", {
+    params: { attendance_code },
+  });
+}
+
+module.exports = {
+  getEmployeeProfile,
+  getLeaveDetails,
+  getPayrollDetails,
+  getDocuments,
+  getUserAttendance,
+  getLeaveHistory,
+  getLeaveBalance
 }
