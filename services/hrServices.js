@@ -38,9 +38,25 @@ function getDocuments(attendance_code) {
   return callGateway("GET", "document", { params: { attendance_code } });
 };
 
+function getUserAttendance(attendance_code, year, month) {
+  if (!attendance_code) throw new Error("attendance_code is required");
+
+  const body = {
+    attendance_code,
+  };
+
+  if (year) body.year = Number(year);
+  if (month) body.month = Number(month);
+
+  return callGateway("POST", "userAttendance", {
+    data: body,
+  });
+}
+
 module.exports={
     getEmployeeProfile,
     getLeaveDetails,
     getPayrollDetails,
-    getDocuments
+    getDocuments,
+    getUserAttendance
 }

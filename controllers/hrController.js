@@ -2,7 +2,8 @@ const {
     getEmployeeProfile,
     getLeaveDetails,
     getPayrollDetails,
-    getDocuments
+    getDocuments,
+    getUserAttendance
 } = require("../services/hrServices");
 
 function getAttendanceCodeFromToken(req, res) {
@@ -96,9 +97,35 @@ async function documentDetails(req, res) {
     }
 }
 
+async function userAttendance(req, res) {
+  try {
+    const attendance_code = getAttendanceCodeFromToken(req, res);
+    if (!attendance_code) return;
+
+    const { year, month } = req.query;
+
+    const data = await getUserAttendance(attendance_code, year, month);
+
+    return res.status(200).json({
+      success: true,
+      result: data,
+    });
+  } catch (e) {
+    const code = e.response?.status ?? 500;
+
+    return res.status(code).json(
+      e.response?.data ?? {
+        success: false,
+        message: e.message,
+      }
+    );
+  }
+}
+
 module.exports = {
     employeeProfile,
     leaveDetails,
     payrollDetails,
-    documentDetails
+    documentDetails,
+    userAttendance
 }
