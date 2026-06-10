@@ -119,6 +119,7 @@ async function userAttendance(req, res) {
                 late_days: 0,
                 leave_days: 0,
                 off_days: 0,
+                holiday_days: 0,
             },
             items: Array.isArray(data?.items)
                 ? data.items.map((item) => ({
@@ -128,6 +129,8 @@ async function userAttendance(req, res) {
                     date_number: item.date_number,
                     month_name: item.month_name,
                     status: item.status,
+                    leave_type_id: item.leave_type_id ?? null,
+                    leave_type: item.leave_type ?? null,
                     check_in_time: item.check_in_time,
                     check_out_time: item.check_out_time,
                     shift_start_time: item.shift_start_time,
@@ -161,113 +164,113 @@ async function userAttendance(req, res) {
 }
 
 async function leaveHistory(req, res) {
-  try {
-    const attendance_code = getAttendanceCodeFromToken(req, res);
-    if (!attendance_code) return;
+    try {
+        const attendance_code = getAttendanceCodeFromToken(req, res);
+        if (!attendance_code) return;
 
-    const data = await getLeaveHistory(attendance_code);
+        const data = await getLeaveHistory(attendance_code);
 
-    const safeData = {
-      success: data?.success ?? true,
-      message: data?.message ?? "Leave history fetched successfully",
-      employee_id: data?.employee_id ?? null,
-      items: Array.isArray(data?.items)
-        ? data.items.map((item) => ({
-            leave_id: item.leave_id,
-            leave_type_id: item.leave_type_id,
-            leave_type_name: item.leave_type_name ?? "Leave",
+        const safeData = {
+            success: data?.success ?? true,
+            message: data?.message ?? "Leave history fetched successfully",
+            employee_id: data?.employee_id ?? null,
+            items: Array.isArray(data?.items)
+                ? data.items.map((item) => ({
+                    leave_id: item.leave_id,
+                    leave_type_id: item.leave_type_id,
+                    leave_type_name: item.leave_type_name ?? "Leave",
 
-            policy_id: item.policy_id ?? null,
-            policy_name: item.policy_name ?? null,
-            policy_code: item.policy_code ?? null,
+                    policy_id: item.policy_id ?? null,
+                    policy_name: item.policy_name ?? null,
+                    policy_code: item.policy_code ?? null,
 
-            leave_reason: item.leave_reason ?? null,
-            start_date: item.start_date,
-            end_date: item.end_date,
-            days: item.days ?? 0,
+                    leave_reason: item.leave_reason ?? null,
+                    start_date: item.start_date,
+                    end_date: item.end_date,
+                    days: item.days ?? 0,
 
-            leave_taken: item.leave_taken ?? 0,
-            leave_remaining: item.leave_remaining ?? 0,
+                    leave_taken: item.leave_taken ?? 0,
+                    leave_remaining: item.leave_remaining ?? 0,
 
-            requested_on: item.requested_on ?? null,
-            approved_on: item.approved_on ?? null,
+                    requested_on: item.requested_on ?? null,
+                    approved_on: item.approved_on ?? null,
 
-            approved_by: item.approved_by ?? null,
-            reporting_manager: item.reporting_manager ?? null,
-            level2_reporting_manager: item.level2_reporting_manager ?? null,
+                    approved_by: item.approved_by ?? null,
+                    reporting_manager: item.reporting_manager ?? null,
+                    level2_reporting_manager: item.level2_reporting_manager ?? null,
 
-            status_code: item.status_code,
-            status_label: item.status_label ?? "Unknown",
-            status_color: item.status_color ?? "grey",
+                    status_code: item.status_code,
+                    status_label: item.status_label ?? "Unknown",
+                    status_color: item.status_color ?? "grey",
 
-            has_file: item.has_file === "Y",
-            leave_file_size: item.leave_file_size ?? 0,
-            document_file_name: item.document_file_name ?? null,
-            document_mime_type: item.document_mime_type ?? null,
-          }))
-        : [],
-    };
+                    has_file: item.has_file === "Y",
+                    leave_file_size: item.leave_file_size ?? 0,
+                    document_file_name: item.document_file_name ?? null,
+                    document_mime_type: item.document_mime_type ?? null,
+                }))
+                : [],
+        };
 
-    return res.status(200).json({
-      success: true,
-      result: safeData,
-    });
-  } catch (e) {
-    const code = e.response?.status ?? 500;
+        return res.status(200).json({
+            success: true,
+            result: safeData,
+        });
+    } catch (e) {
+        const code = e.response?.status ?? 500;
 
-    return res.status(code).json(
-      e.response?.data ?? {
-        success: false,
-        message: e.message,
-      }
-    );
-  }
+        return res.status(code).json(
+            e.response?.data ?? {
+                success: false,
+                message: e.message,
+            }
+        );
+    }
 }
 
 async function leaveBalance(req, res) {
-  try {
-    const attendance_code = getAttendanceCodeFromToken(req, res);
-    if (!attendance_code) return;
+    try {
+        const attendance_code = getAttendanceCodeFromToken(req, res);
+        if (!attendance_code) return;
 
-    const data = await getLeaveBalance(attendance_code);
+        const data = await getLeaveBalance(attendance_code);
 
-    const safeData = {
-      success: data?.success ?? true,
-      message: data?.message ?? "Leave balances fetched successfully",
-      employee_id: data?.employee_id ?? null,
-      items: Array.isArray(data?.items)
-        ? data.items.map((item) => ({
-            tracker_id: item.tracker_id,
+        const safeData = {
+            success: data?.success ?? true,
+            message: data?.message ?? "Leave balances fetched successfully",
+            employee_id: data?.employee_id ?? null,
+            items: Array.isArray(data?.items)
+                ? data.items.map((item) => ({
+                    tracker_id: item.tracker_id,
 
-            leave_type_id: item.leave_type_id,
-            leave_type_name: item.leave_type_name ?? "Leave",
+                    leave_type_id: item.leave_type_id,
+                    leave_type_name: item.leave_type_name ?? "Leave",
 
-            total_leave_allowed: item.total_leave_allowed ?? 0,
-            leave_taken: item.leave_taken ?? 0,
-            leave_remaining: item.leave_remaining ?? 0,
-            no_of_units_applied: item.no_of_units_applied ?? 0,
+                    total_leave_allowed: item.total_leave_allowed ?? 0,
+                    leave_taken: item.leave_taken ?? 0,
+                    leave_remaining: item.leave_remaining ?? 0,
+                    no_of_units_applied: item.no_of_units_applied ?? 0,
 
-            policy_id: item.policy_id ?? null,
-            policy_name: item.policy_name ?? null,
-            policy_code: item.policy_code ?? null,
-          }))
-        : [],
-    };
+                    policy_id: item.policy_id ?? null,
+                    policy_name: item.policy_name ?? null,
+                    policy_code: item.policy_code ?? null,
+                }))
+                : [],
+        };
 
-    return res.status(200).json({
-      success: true,
-      result: safeData,
-    });
-  } catch (e) {
-    const code = e.response?.status ?? 500;
+        return res.status(200).json({
+            success: true,
+            result: safeData,
+        });
+    } catch (e) {
+        const code = e.response?.status ?? 500;
 
-    return res.status(code).json(
-      e.response?.data ?? {
-        success: false,
-        message: e.message,
-      }
-    );
-  }
+        return res.status(code).json(
+            e.response?.data ?? {
+                success: false,
+                message: e.message,
+            }
+        );
+    }
 }
 
 module.exports = {
