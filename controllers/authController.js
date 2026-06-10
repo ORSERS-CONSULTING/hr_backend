@@ -117,8 +117,6 @@ async function refresh(req, res) {
       device_id,
     });
 
-    console.log("🔄 REFRESH VALIDATE RESPONSE:", data);
-
     const user_id = Number(data?.user_id);
     const emp_id = data?.emp_id ? String(data.emp_id) : null;
 
