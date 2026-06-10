@@ -11,6 +11,8 @@ const {
 
 const days = Number(process.env.REFRESH_TOKEN_DAYS || 30);
 
+const accessTokenTtl = process.env.ACCESS_TOKEN_TTL || "30m";
+
 async function persistRefreshToken(userId, refresh_token, device_id) {
   await authTokensCreate({
     user_id: Number(userId),
@@ -124,13 +126,19 @@ async function refresh(req, res) {
       return res.status(401).json({ message: "Invalid refresh token" });
     }
 
+    if (!emp_id) {
+      return res.status(401).json({
+        message: "Employee ID missing during refresh",
+      });
+    }
+
     const access_token = signAccessToken(
       {
         sub: String(user_id),
         role: "user",
         emp_id,
       },
-      "30m"
+      accessTokenTtl
     );
 
     const new_refresh_token = crypto.randomBytes(64).toString("hex");
