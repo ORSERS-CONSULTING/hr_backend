@@ -5,7 +5,8 @@ const {
     getDocuments,
     getUserAttendance,
     getLeaveHistory,
-    getLeaveBalance
+    getLeaveBalance,
+    createLeaveRequest
 } = require("../services/hrServices");
 
 function getAttendanceCodeFromToken(req, res) {
@@ -273,6 +274,71 @@ async function leaveBalance(req, res) {
     }
 }
 
+async function createUserLeave(req, res) {
+    try {
+        const attendance_code = getAttendanceCodeFromToken(req, res);
+        if (!attendance_code) return;
+
+        const { leave_type_id, policy_id, start_date, end_date, leave_reason } = req.body || {};
+
+        if (!leave_type_id) {
+            return res.status(400).json({
+                success: false,
+                message: "Please select a leave type.",
+            });
+        }
+
+        if (!start_date) {
+            return res.status(400).json({
+                success: false,
+                message: "Please select a start date.",
+            });
+        }
+
+        if (!end_date) {
+            return res.status(400).json({
+                success: false,
+                message: "Please select an end date.",
+            });
+        } 
+        
+        const data = await createLeaveRequest(
+            attendance_code,
+            leave_type_id,
+            policy_id ?? null,
+            start_date,
+            end_date,
+            leave_reason ?? null
+        );
+
+        if (data?.success === false) {
+            return res.status(400).json({
+                success: false,
+                message: data.message || "Unable to submit leave request.",
+                result: data,
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: data?.message || "Leave request submitted successfully.",
+            result: data,
+        });
+    } catch (e) {
+        const code = e.response?.status ?? 500;
+        const upstreamData = e.response?.data;
+
+        return res.status(code).json({
+            success: false,
+            message:
+                upstreamData?.message ||
+                e.message ||
+                "Unable to submit leave request. Please try again.",
+            result: upstreamData ?? null,
+        });
+    }
+}
+
 module.exports = {
     employeeProfile,
     leaveDetails,
@@ -280,5 +346,6 @@ module.exports = {
     documentDetails,
     userAttendance,
     leaveHistory,
-    leaveBalance
+    leaveBalance,
+    createUserLeave
 }

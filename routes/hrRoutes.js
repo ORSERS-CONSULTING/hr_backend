@@ -9,7 +9,8 @@ const {
     documentDetails,
     userAttendance,
     leaveHistory,
-    leaveBalance
+    leaveBalance,
+    createUserLeave
 } = require("../controllers/hrController");
 
 
@@ -25,5 +26,7 @@ router.get("/userAttendance", authUser, userAttendance);
 
 router.get("/leave/history", authUser, leaveHistory);
 router.get("/leave/balance", authUser, leaveBalance);
+
+router.post("/leave/create", authUser, createUserLeave)
 
 module.exports = router;

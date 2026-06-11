@@ -53,6 +53,7 @@ function getUserAttendance(attendance_code, year, month) {
   });
 }
 
+
 function getLeaveHistory(attendance_code) {
   if (!attendance_code) throw new Error("attendance_code is required");
 
@@ -69,6 +70,30 @@ function getLeaveBalance(attendance_code) {
   });
 }
 
+function createLeaveRequest(attendance_code, leave_type_id, policy_id, start_date, end_date, leave_reason){
+  if (!attendance_code) throw new Error("attendance_code is required");
+
+  if (!leave_type_id) throw new Error("leave_type_id is required");
+
+  if (!start_date) throw new Error("start_date is required");
+
+  if (!end_date) throw new Error("end_date is required");
+
+  const body = {
+    attendance_code, 
+    leave_type_id, 
+    policy_id, 
+    start_date, 
+    end_date, 
+    leave_reason
+  }
+
+  return callGateway("POST", "leave/create", {
+    data: body,
+  })
+
+};
+
 module.exports = {
   getEmployeeProfile,
   getLeaveDetails,
@@ -76,5 +101,6 @@ module.exports = {
   getDocuments,
   getUserAttendance,
   getLeaveHistory,
-  getLeaveBalance
+  getLeaveBalance,
+  createLeaveRequest
 }
