@@ -197,8 +197,8 @@ async function leaveHistory(req, res) {
                     approved_on: item.approved_on ?? null,
 
                     approved_by: item.approved_by ?? null,
-                    reporting_manager: item.reporting_manager ?? null,
                     level2_reporting_manager: item.level2_reporting_manager ?? null,
+                    level2_reporting_manager_name: item.level2_reporting_manager_name ?? null,
 
                     status_code: item.status_code,
                     status_label: item.status_label ?? "Unknown",
